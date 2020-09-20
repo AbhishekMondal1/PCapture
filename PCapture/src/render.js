@@ -1,16 +1,37 @@
+const {desktopCapturer, remote } = require('electron');
+const { writeFile } = require('fs');
+const {dialog, Menu } = remote;
+
+let mediaRecoder; //MediaRecorder instance to capture footage
+const recordedChunks = [];
+
+
 // Buttons
 const videoElement = document.querySelector('video');
+
 const startBtn = document.getElementById('startBtn');
+startBtn.onclick = e =>{
+    mediaRecoder.start();
+    startBtn.classList.add('is-danger');
+    startBtn.innerText = 'Recording';
+};
+
 const stopBtn = document.getElementById('stopBtn');
+stopBtn.onclick = e => {
+    mediaRecoder.stop();
+    startBtn.classList.remove('is-danger');
+    startBtn.innerText = 'Start';
+};
+
 const videoSelectBtn = document.getElementById('videoSelectBtn');
 videoSelectBtn.onclick = getVideoSources;
 
 
-const {desktopCapture, dialog } = require('electron');
+
 
 // Video sources 
 async function getVideoSources(){
-    const inputSources = await desktopCapture.getVideoSources({
+    const inputSources = await desktopCapturer.getSources({
         types: ['window', 'screen']
     });
 
@@ -25,9 +46,6 @@ async function getVideoSources(){
         videoOptionMenu.popup();
 }
 
-
-let mediaRecoder; //MediaRecorder instance to capture footage
-const recordedChunks = [];
 
 
 // change videoSource window to record
@@ -69,7 +87,7 @@ function handleDataAvailable(e){
     recordedChunks.push(e.data);
 }
 
-const { writeFile } = require('fs');
+
 
 // Save the video file on stop
 async function handleStop(e){
@@ -85,8 +103,7 @@ async function handleStop(e){
         defaultPath: `vid-${Date.now()}.webm`
     });
 
-    console.log(filePath);
-
+    if(filePath){
     writeFile(filePath,buffer, ()=> console.log('video saved successfully'));
-
+    }
 }
