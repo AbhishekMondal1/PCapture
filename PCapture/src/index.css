@@ -1,11 +1,12 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   margin: auto;
   padding: 0;
   text-align: center;
 }
 
-video{
+video {
   width: 100%;
   height: auto;
 }
